@@ -1,34 +1,36 @@
 
 
-const elements = {
-    grid: document.getElementById('year-grid'),
-    daysRemaining: document.getElementById('days-remaining'),
-    percentCompleted: document.getElementById('percent-completed'),
-    milestoneDisplay: document.getElementById('milestone-display'),
-    settingsTrigger: document.getElementById('settings-trigger'),
-    settingsModal: document.getElementById('settings-modal'),
-    closeSettings: document.getElementById('close-settings'),
-    radioButtons: document.querySelectorAll('input[name="today-style"]'),
+let elements = {};
 
+function initializeElements() {
+    elements = {
+        grid: document.getElementById('year-grid'),
+        daysRemaining: document.getElementById('days-remaining'),
+        percentCompleted: document.getElementById('percent-completed'),
+        milestoneDisplay: document.getElementById('milestone-display'),
+        settingsTrigger: document.getElementById('settings-trigger'),
+        settingsModal: document.getElementById('settings-modal'),
+        closeSettings: document.getElementById('close-settings'),
+        radioButtons: document.querySelectorAll('input[name="today-style"]'),
 
+        // Scratchpad Elements
+        scratchpadTrigger: document.getElementById('scratchpad-trigger'),
+        scratchpadPanel: document.getElementById('scratchpad-panel'),
+        scratchpadContent: document.getElementById('scratchpad-content'),
+        closeScratchpad: document.getElementById('close-scratchpad'),
 
-    // Scratchpad Elements
-    scratchpadTrigger: document.getElementById('scratchpad-trigger'),
-    scratchpadPanel: document.getElementById('scratchpad-panel'),
-    scratchpadContent: document.getElementById('scratchpad-content'),
-    closeScratchpad: document.getElementById('close-scratchpad'),
-
-    // Day Modal Elements
-    dayModal: document.getElementById('day-modal'),
-    modalDateTitle: document.getElementById('modal-date-title'),
-    dotNote: document.getElementById('dot-note'),
-    saveDotBtn: document.getElementById('save-dot-btn'),
-    deleteDotBtn: document.getElementById('delete-dot-btn'),
-    closeDayModal: document.getElementById('close-day-modal'),
-    milestoneOption: document.getElementById('milestone-option'),
-    journalOption: document.getElementById('journal-option'),
-    dotTypeRadios: document.getElementsByName('dot-type')
-};
+        // Day Modal Elements
+        dayModal: document.getElementById('day-modal'),
+        modalDateTitle: document.getElementById('modal-date-title'),
+        dotNote: document.getElementById('dot-note'),
+        saveDotBtn: document.getElementById('save-dot-btn'),
+        deleteDotBtn: document.getElementById('delete-dot-btn'),
+        closeDayModal: document.getElementById('close-day-modal'),
+        milestoneOption: document.getElementById('milestone-option'),
+        journalOption: document.getElementById('journal-option'),
+        dotTypeRadios: document.getElementsByName('dot-type')
+    };
+}
 
 // Default State
 const DEFAULT_STATE = {
@@ -56,11 +58,17 @@ function saveState() {
 }
 
 function init() {
-    checkNewDay();
-    setupSettings();
-    setupScratchpad();
-    setupDotsInteraction();
-    render();
+    try {
+        initializeElements();
+        checkNewDay();
+        setupSettings();
+        setupScratchpad();
+        setupDotsInteraction();
+        render();
+    } catch (e) {
+        console.error("Initialization Failed:", e);
+        document.body.innerHTML += `<div style="color:red; padding:20px;">Error: ${e.message}</div>`;
+    }
 }
 
 function checkNewDay() {
@@ -352,4 +360,11 @@ function setupScratchpad() {
             elements.scratchpadPanel.classList.remove('active');
         }
     });
+}
+
+// Initialize
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
 }
