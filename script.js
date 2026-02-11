@@ -1,6 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-    init();
-});
+
 
 const elements = {
     grid: document.getElementById('year-grid'),
@@ -35,7 +33,6 @@ const elements = {
 // Default State
 const DEFAULT_STATE = {
     todayStyle: 'orange',
-    todayStyle: 'orange',
     scratchpad: '',
     dotsData: {}, // 'YYYY-MM-DD': { note: '', type: 'milestone'|'journal', completed: boolean }
     focusHistory: [] // Array of { text, completed, date }
@@ -46,7 +43,12 @@ let currentState = loadState();
 function loadState() {
     const stored = localStorage.getItem('yearInDotsState');
     if (!stored) return { ...DEFAULT_STATE };
-    return { ...DEFAULT_STATE, ...JSON.parse(stored) };
+    try {
+        return { ...DEFAULT_STATE, ...JSON.parse(stored) };
+    } catch (e) {
+        console.error('State load failed', e);
+        return { ...DEFAULT_STATE };
+    }
 }
 
 function saveState() {
