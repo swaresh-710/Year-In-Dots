@@ -6,19 +6,13 @@ const elements = {
     grid: document.getElementById('year-grid'),
     daysRemaining: document.getElementById('days-remaining'),
     percentCompleted: document.getElementById('percent-completed'),
+    milestoneDisplay: document.getElementById('milestone-display'),
     settingsTrigger: document.getElementById('settings-trigger'),
     settingsModal: document.getElementById('settings-modal'),
     closeSettings: document.getElementById('close-settings'),
     radioButtons: document.querySelectorAll('input[name="today-style"]'),
 
-    // Focus Elements
-    focusInput: document.getElementById('daily-focus-input'),
-    focusDisplay: document.getElementById('focus-display'),
-    focusCheckbox: document.getElementById('focus-checkbox'),
 
-    focusWrapper: document.getElementById('focus-wrapper'),
-    clearFocusBtn: document.getElementById('clear-focus'),
-    focusTitle: document.querySelector('.focus-title'),
 
     // Scratchpad Elements
     scratchpadTrigger: document.getElementById('scratchpad-trigger'),
@@ -41,13 +35,10 @@ const elements = {
 // Default State
 const DEFAULT_STATE = {
     todayStyle: 'orange',
-    dailyFocus: {
-        text: '',
-        completed: false,
-        date: '' // To reset daily
-    },
+    todayStyle: 'orange',
     scratchpad: '',
-    dotsData: {} // 'YYYY-MM-DD': { note: '', type: 'milestone'|'journal', completed: boolean }
+    dotsData: {}, // 'YYYY-MM-DD': { note: '', type: 'milestone'|'journal', completed: boolean }
+    focusHistory: [] // Array of { text, completed, date }
 };
 
 let currentState = loadState();
@@ -65,23 +56,14 @@ function saveState() {
 function init() {
     checkNewDay();
     setupSettings();
-    setupFocus();
     setupScratchpad();
     setupDotsInteraction();
     render();
 }
 
 function checkNewDay() {
-    const todayStr = new Date().toDateString();
-    if (currentState.dailyFocus.date !== todayStr) {
-        // Reset focus for a new day, but keep the old one in history if we wanted (not yet implemented)
-        currentState.dailyFocus = {
-            text: '',
-            completed: false,
-            date: todayStr
-        };
-        saveState();
-    }
+    // No longer needed for focus, but kept empty for potential future use or removed entirely if no other use.
+    // For now, we can remove the logic inside since focus is gone.
 }
 
 function render() {
@@ -105,8 +87,7 @@ function render() {
     // Countdown / Stats
     updateCountdown(totalDays, dayOfYear, daysRemaining);
 
-    // Render Focus UI
-    renderFocus();
+
 
     // Render Grid
     elements.grid.innerHTML = '';
@@ -137,6 +118,12 @@ function render() {
             if (data.type) {
                 dot.classList.add(data.type);
                 dot.title += ` - ${data.note || data.type}`;
+
+                // Add Emoji for Journal
+                if (data.type === 'journal') {
+                    dot.textContent = '✍️';
+                    dot.classList.add('has-emoji');
+                }
             }
         }
 
@@ -157,7 +144,11 @@ function getDateStringFromDay(year, dayOfYear) {
 }
 
 function updateCountdown(totalDays, currentDayOfYear, standardDaysRemaining) {
-    // Find nearest future milestone
+    // Always show standard days remaining, ignoring milestones for the main counter
+    elements.daysRemaining.textContent = `${standardDaysRemaining} Days Remaining`;
+    elements.daysRemaining.classList.remove('highlight-stat');
+
+    // Find nearest future milestone for separate display
     const nowStr = getDateStringFromDay(new Date().getFullYear(), currentDayOfYear);
     const dots = currentState.dotsData;
 
@@ -166,11 +157,9 @@ function updateCountdown(totalDays, currentDayOfYear, standardDaysRemaining) {
 
     for (const [dateStr, data] of Object.entries(dots)) {
         if (data.type === 'milestone') {
-            // Simple string comparison works for YYYY-MM-DD
             if (dateStr > nowStr) {
-                // Calculate diff
                 const milestoneDate = new Date(dateStr);
-                const today = new Date(nowStr); // Normalize time
+                const today = new Date(nowStr);
                 const diffTime = Math.abs(milestoneDate - today);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -183,11 +172,11 @@ function updateCountdown(totalDays, currentDayOfYear, standardDaysRemaining) {
     }
 
     if (nearestMilestone) {
-        elements.daysRemaining.textContent = `${nearestMilestone.days} Days until ${nearestMilestone.note || 'Milestone'}`;
-        elements.daysRemaining.classList.add('highlight-stat');
+        elements.milestoneDisplay.textContent = `${nearestMilestone.days} Days until ${nearestMilestone.note || 'Milestone'}`;
+        elements.milestoneDisplay.classList.add('visible');
     } else {
-        elements.daysRemaining.textContent = `${standardDaysRemaining} Days Remaining`;
-        elements.daysRemaining.classList.remove('highlight-stat');
+        elements.milestoneDisplay.textContent = '';
+        elements.milestoneDisplay.classList.remove('visible');
     }
 }
 
@@ -329,94 +318,7 @@ function setupSettings() {
     });
 }
 
-function setupFocus() {
-    // Input Enter Key
-    elements.focusInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && e.target.value.trim() !== '') {
-            setFocus(e.target.value.trim());
-        }
-    });
 
-    // Checkbox Click
-    elements.focusCheckbox.addEventListener('click', () => {
-        toggleFocusCompletion();
-    });
-
-    // Display Click (to toggle completion too)
-    elements.focusDisplay.addEventListener('click', () => {
-        toggleFocusCompletion();
-    });
-
-    // Clear Focus
-    elements.clearFocusBtn.addEventListener('click', () => {
-        clearFocus();
-    });
-}
-
-function setFocus(text) {
-    currentState.dailyFocus.text = text;
-    currentState.dailyFocus.completed = false;
-    currentState.dailyFocus.date = new Date().toDateString();
-    saveState();
-    renderFocus();
-}
-
-function toggleFocusCompletion() {
-    currentState.dailyFocus.completed = !currentState.dailyFocus.completed;
-    saveState();
-    renderFocus();
-
-    // Optional: Celebrate if completed!
-    if (currentState.dailyFocus.completed && currentState.todayStyle !== 'hourglass') {
-        const todayDot = document.querySelector('.dot.today');
-        if (todayDot) {
-            todayDot.style.backgroundColor = 'var(--highlight-color)'; // Make it solid gold/orange
-            setTimeout(() => {
-                // Revert animation style if needed in render()
-                render();
-            }, 1000);
-        }
-    }
-}
-
-function clearFocus() {
-    currentState.dailyFocus.text = '';
-    currentState.dailyFocus.completed = false;
-    saveState();
-    renderFocus();
-    // Focus back on input
-    setTimeout(() => elements.focusInput.focus(), 10);
-}
-
-function renderFocus() {
-    const { text, completed } = currentState.dailyFocus;
-
-    if (text) {
-        // Show Display Mode
-        elements.focusInput.hidden = true;
-        elements.focusDisplay.hidden = false;
-        elements.focusCheckbox.hidden = false;
-        elements.clearFocusBtn.hidden = false;
-        elements.focusTitle.textContent = "TODAY";
-
-        elements.focusDisplay.textContent = text;
-
-        if (completed) {
-            elements.focusWrapper.classList.add('focus-completed');
-        } else {
-            elements.focusWrapper.classList.remove('focus-completed');
-        }
-    } else {
-        // Show Input Mode
-        elements.focusInput.hidden = false;
-        elements.focusInput.value = '';
-        elements.focusDisplay.hidden = true;
-        elements.focusCheckbox.hidden = true;
-        elements.clearFocusBtn.hidden = true;
-        elements.focusTitle.textContent = "What is your main focus for today?";
-        elements.focusWrapper.classList.remove('focus-completed');
-    }
-}
 
 function setupScratchpad() {
     // Load saved content

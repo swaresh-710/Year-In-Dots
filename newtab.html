@@ -11,15 +11,7 @@
 
 <body>
     <div id="app">
-        <div class="daily-focus-container">
-            <h2 class="focus-title">What is your main focus for today?</h2>
-            <div class="focus-input-wrapper" id="focus-wrapper">
-                <input type="text" id="daily-focus-input" placeholder="Enter your main task..." autocomplete="off">
-                <div class="focus-checkbox" id="focus-checkbox" hidden></div>
-                <span id="focus-display" hidden></span>
-                <button id="clear-focus" class="icon-btn" hidden title="Clear Focus">✕</button>
-            </div>
-        </div>
+
 
         <div id="year-grid" class="dots-grid"></div>
 
@@ -28,6 +20,8 @@
             <span class="divider">•</span>
             <span id="percent-completed"></span>
         </div>
+
+        <div id="milestone-display" class="milestone-text"></div>
 
         <div class="scratchpad-trigger" id="scratchpad-trigger" title="Scratchpad">📝</div>
         <div class="scratchpad-panel" id="scratchpad-panel">
@@ -60,6 +54,9 @@
                 <button id="close-settings">Done</button>
             </div>
         </div>
+
+
+
         <div class="settings-modal" id="day-modal">
             <div class="settings-content day-modal-content">
                 <h3 id="modal-date-title">Date</h3>

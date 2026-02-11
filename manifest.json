@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "A live wallpaper New Tab showing 365 days as dots.",
   "chrome_url_overrides": {
-    "newtab": "index.html"
+    "newtab": "newtab.html"
   },
   "permissions": [
     "storage"

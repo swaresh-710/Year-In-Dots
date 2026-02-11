@@ -26,9 +26,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
-    width: 90%;
-    max-width: 1000px;
+    gap: 60px;
+    width: 95%;
+    max-width: 1500px;
 }
 
 .dots-grid {
@@ -36,14 +36,14 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
-    gap: 12px;
+    gap: 16px;
     /* Equal spacing */
     width: 100%;
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
     background-color: var(--dot-future);
     transition: all 0.3s ease;
@@ -90,11 +90,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 12px;
+    font-size: 18px;
     /* Smaller fit */
-    width: 10px;
+    width: 15px;
     /* Force maintain grid cell size */
-    height: 10px;
+    height: 15px;
     line-height: 1;
     animation: hourglass-flip 2s infinite ease-in-out;
 }
@@ -124,7 +124,7 @@ body {
 }
 
 .footer-stats {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 300;
     opacity: 0.8;
     display: flex;
@@ -435,9 +435,21 @@ button#close-settings {
 }
 
 .dot.journal {
-    background-color: #4895ef;
-    /* Darker blue/purple for past */
-    opacity: 0.8;
+    background-color: transparent !important;
+    /* Remove dot background */
+    box-shadow: none !important;
+}
+
+.dot.has-emoji {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    /* Make emoji bigger */
+    line-height: 1;
+    transform: scale(1);
 }
 
 /* Day Modal Specifics */
@@ -510,4 +522,99 @@ button#close-settings {
     color: var(--dot-today-orange);
     font-weight: 500;
     transition: color 0.3s;
+}
+
+/* Focus History */
+.history-trigger {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.history-trigger:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.history-content {
+    width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    overflow-y: auto;
+    max-height: 300px;
+    text-align: left;
+}
+
+#history-list li {
+    background: #252525;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+#history-list li .date {
+    opacity: 0.5;
+    font-size: 0.8rem;
+    margin-right: 10px;
+}
+
+#history-list li.completed {
+    border-left: 3px solid var(--dot-today-orange);
+}
+
+#close-history {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#close-history:hover {
+    background: #444;
+}
+
+/* Glowing Milestone Text */
+.milestone-text {
+    margin-top: 30px;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--dot-today-orange);
+    text-shadow: 0 0 10px rgba(255, 159, 28, 0.5), 0 0 20px rgba(255, 159, 28, 0.3);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    letter-spacing: 1px;
+}
+
+.milestone-text.visible {
+    opacity: 1;
+    animation: pulse-glow 3s infinite alternate;
+}
+
+@keyframes pulse-glow {
+    from {
+        text-shadow: 0 0 10px rgba(255, 159, 28, 0.5), 0 0 20px rgba(255, 159, 28, 0.3);
+    }
+
+    to {
+        text-shadow: 0 0 15px rgba(255, 159, 28, 0.8), 0 0 30px rgba(255, 159, 28, 0.5);
+    }
 }
