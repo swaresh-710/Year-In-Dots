@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year In Dots</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <div class="daily-focus-container">
+            <h2 class="focus-title">What is your main focus for today?</h2>
+            <div class="focus-input-wrapper" id="focus-wrapper">
+                <input type="text" id="daily-focus-input" placeholder="Enter your main task..." autocomplete="off">
+                <div class="focus-checkbox" id="focus-checkbox" hidden></div>
+                <span id="focus-display" hidden></span>
+                <button id="clear-focus" class="icon-btn" hidden title="Clear Focus">✕</button>
+            </div>
+        </div>
+
+        <div id="year-grid" class="dots-grid"></div>
+
+        <div class="footer-stats">
+            <span id="days-remaining"></span>
+            <span class="divider">•</span>
+            <span id="percent-completed"></span>
+        </div>
+
+        <div class="scratchpad-trigger" id="scratchpad-trigger" title="Scratchpad">📝</div>
+        <div class="scratchpad-panel" id="scratchpad-panel">
+            <div class="scratchpad-header">
+                <span>Scratchpad</span>
+                <button id="close-scratchpad">✕</button>
+            </div>
+            <textarea id="scratchpad-content" placeholder="Type anything here... it saves automatically."></textarea>
+        </div>
+
+        <div class="settings-trigger" id="settings-trigger">⚙️</div>
+
+        <div class="settings-modal" id="settings-modal">
+            <div class="settings-content">
+                <h3>Customize Today</h3>
+                <div class="option-group">
+                    <label>
+                        <input type="radio" name="today-style" value="orange" checked>
+                        Orange Dot
+                    </label>
+                    <label>
+                        <input type="radio" name="today-style" value="blink-red">
+                        Blinking Red
+                    </label>
+                    <label>
+                        <input type="radio" name="today-style" value="hourglass">
+                        Hourglass (Flip)
+                    </label>
+                </div>
+                <button id="close-settings">Done</button>
+            </div>
+        </div>
+        <div class="settings-modal" id="day-modal">
+            <div class="settings-content day-modal-content">
+                <h3 id="modal-date-title">Date</h3>
+
+                <div class="option-group">
+                    <label id="milestone-option">
+                        <input type="radio" name="dot-type" value="milestone">
+                        <span>Set Milestone (Future)</span>
+                    </label>
+                    <label id="journal-option">
+                        <input type="radio" name="dot-type" value="journal">
+                        <span>Journal / Win (Past)</span>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <textarea id="dot-note" placeholder="Enter details..." rows="3"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="save-dot-btn">Save</button>
+                    <button id="delete-dot-btn" class="danger-btn">Clear</button>
+                    <button id="close-day-modal" class="secondary-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
