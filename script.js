@@ -11,6 +11,11 @@ const elements = {
     closeSettings: document.getElementById('close-settings'),
     radioButtons: document.querySelectorAll('input[name="today-style"]'),
 
+    // Focus Elements
+    focusInput: document.getElementById('daily-focus-input'),
+    focusDisplay: document.getElementById('focus-display'),
+    focusCheckbox: document.getElementById('focus-checkbox'),
+
     focusWrapper: document.getElementById('focus-wrapper'),
     clearFocusBtn: document.getElementById('clear-focus'),
     focusTitle: document.querySelector('.focus-title'),
