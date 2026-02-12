@@ -595,7 +595,7 @@ button#close-settings {
 /* Glowing Milestone Text */
 .milestone-text {
     margin-top: 30px;
-    font-size: 2.2rem;
+    font-size: 1.4rem;
     font-weight: 300;
     color: var(--dot-today-orange);
     text-shadow: 0 0 10px rgba(255, 159, 28, 0.5), 0 0 20px rgba(255, 159, 28, 0.3);
